@@ -1,6 +1,8 @@
 package com.project.ShoppingCart.service;
 
+import com.project.ShoppingCart.dto.AddToCartDto;
 import com.project.ShoppingCart.dto.ProductDto;
+import com.project.ShoppingCart.exceptions.ProductNotExistsException;
 import com.project.ShoppingCart.model.Category;
 import com.project.ShoppingCart.model.Product;
 import com.project.ShoppingCart.repository.ProductRepo;
@@ -28,7 +30,7 @@ public class ProductService {
         productRepo.save(product);
     }
 
-    public ProductDto getProductDto(Product product){
+    public ProductDto getProductDto(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setName(product.getName());
         productDto.setImageURL(product.getImageURL());
@@ -43,7 +45,7 @@ public class ProductService {
     public List<ProductDto> getAllProducts() {
         List<Product> allProducts = productRepo.findAll();
         List<ProductDto> productDtos = new ArrayList<>();
-        for(Product product : allProducts){
+        for (Product product : allProducts) {
             productDtos.add(getProductDto(product));
         }
         return productDtos;
@@ -51,7 +53,7 @@ public class ProductService {
 
     public void updateProduct(ProductDto productDto, int productId) throws Exception {
         Optional<Product> optionalProduct = productRepo.findById(productId);
-        if(!optionalProduct.isPresent()){
+        if (!optionalProduct.isPresent()) {
             throw new Exception("Product is not present");
         }
         Product product = optionalProduct.get();
@@ -61,5 +63,28 @@ public class ProductService {
         product.setPrice(productDto.getPrice());
         product.setQuantity(productDto.getQuantity());
         productRepo.save(product);
+    }
+
+    public Product findById(Integer productId) throws ProductNotExistsException {
+        Optional<Product> optionalProduct = productRepo.findById(productId);
+        if (optionalProduct.isEmpty()) {
+            throw new ProductNotExistsException("Product id is invalid : " + productId);
+        }
+        return optionalProduct.get();
+    }
+
+    public boolean outOfStock(AddToCartDto addToCartDto) throws ProductNotExistsException {
+        Product product = findById(addToCartDto.getProductId());
+        return (product.getQuantity() == 0);
+    }
+
+    public boolean checkStockAvailability(AddToCartDto addToCartDto) throws ProductNotExistsException {
+        Product product = findById(addToCartDto.getProductId());
+        return (product.getQuantity() < addToCartDto.getQuantity());
+    }
+
+    public int getAvailableStock(AddToCartDto addToCartDto) throws ProductNotExistsException {
+        Product product = findById(addToCartDto.getProductId());
+        return product.getQuantity();
     }
 }

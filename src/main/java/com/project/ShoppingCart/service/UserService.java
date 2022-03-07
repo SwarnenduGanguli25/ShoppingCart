@@ -15,6 +15,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -52,7 +53,7 @@ public class UserService {
 
     public SigninResponseDto signin(SigninDto signinDto) throws AuthenticationFailException {
         User user = userRepo.findByEmail(signinDto.getEmail());
-        if(Objects.isNull(user)) {
+        if (Objects.isNull(user)) {
             throw new AuthenticationFailException("Invalid user");
         }
 
@@ -64,5 +65,9 @@ public class UserService {
             e.printStackTrace();
         }
         return new SigninResponseDto("success", "Logged In");
+    }
+
+    public Optional<User> findById(Integer userId) {
+        return userRepo.findById(userId);
     }
 }
