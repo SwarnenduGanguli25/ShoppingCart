@@ -3,6 +3,7 @@ package com.project.ShoppingCart.service;
 import com.project.ShoppingCart.dto.AddToCartDto;
 import com.project.ShoppingCart.dto.CartDto;
 import com.project.ShoppingCart.dto.CartItemDto;
+import com.project.ShoppingCart.exceptions.CustomException;
 import com.project.ShoppingCart.model.Cart;
 import com.project.ShoppingCart.model.Product;
 import com.project.ShoppingCart.model.User;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
@@ -50,5 +52,17 @@ public class CartService {
         cartDto.setCartItems(cartItems);
 
         return cartDto;
+    }
+
+    public void deleteCartItem(int cartItemId, User user) throws CustomException {
+        Optional<Cart> optionalCart = cartRepo.findById(cartItemId);
+        if(optionalCart.isEmpty()){
+            throw new CustomException("Cart item is invalid : "+ cartItemId);
+        }
+        Cart cart = optionalCart.get();
+        if(cart.getUser() != user){
+            throw new CustomException("Cart item does not belong to user: " + user.getId());
+        }
+        cartRepo.delete(cart);
     }
 }

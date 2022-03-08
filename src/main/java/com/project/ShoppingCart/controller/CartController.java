@@ -55,4 +55,17 @@ public class CartController {
 
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{cartItemId}")
+    public ResponseEntity<ApiResponse> deleteCartItem(@PathVariable("cartItemId") int itemId,
+                                                      @RequestParam("userId") int userId) throws CustomException {
+        Optional<User> optionalUser = userService.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new CustomException("User id is invalid");
+        }
+        User user = optionalUser.get();
+        cartService.deleteCartItem(itemId, user);
+
+        return new ResponseEntity<ApiResponse>(new ApiResponse(true, "Item is deleted from cart"), HttpStatus.OK);
+    }
 }
