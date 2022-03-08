@@ -56,11 +56,11 @@ public class CartService {
 
     public void deleteCartItem(int cartItemId, User user) throws CustomException {
         Optional<Cart> optionalCart = cartRepo.findById(cartItemId);
-        if(optionalCart.isEmpty()){
-            throw new CustomException("Cart item is invalid : "+ cartItemId);
+        if (optionalCart.isEmpty()) {
+            throw new CustomException("Cart item is invalid : " + cartItemId);
         }
         Cart cart = optionalCart.get();
-        if(cart.getUser() != user){
+        if (cart.getUser() != user) {
             throw new CustomException("Cart item does not belong to user: " + user.getId());
         }
         cartRepo.delete(cart);
