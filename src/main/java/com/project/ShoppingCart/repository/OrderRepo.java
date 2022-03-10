@@ -1,6 +1,6 @@
 package com.project.ShoppingCart.repository;
 
-import com.project.ShoppingCart.model.Cart;
+import com.project.ShoppingCart.model.Order;
 import com.project.ShoppingCart.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CartRepo extends JpaRepository<Cart, Integer> {
-    List<Cart> findAllByUserOrderByCreatedDateDesc(User user);
-
-    List<Cart> deleteByUser(User user);
+public interface OrderRepo extends JpaRepository<Order, Integer> {
+    List<Order> findAllByUserOrderByCreatedDateDesc(User user);
 }
