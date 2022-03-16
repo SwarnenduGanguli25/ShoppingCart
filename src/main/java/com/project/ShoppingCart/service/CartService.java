@@ -62,7 +62,10 @@ public class CartService {
         if (cart.getUser() != user) {
             throw new CustomException("Cart item does not belong to user: " + user.getId());
         }
+        Product product = productService.findById(cart.getProduct().getId());
+        product.setQuantity(product.getQuantity() + cart.getQuantity());
         cartRepo.delete(cart);
+        productRepo.save(product);
     }
 
     public void deleteUserCart(User user) {
