@@ -50,7 +50,6 @@ public class CartService {
         CartDto cartDto = new CartDto();
         cartDto.setTotalCost(totalCost);
         cartDto.setCartItems(cartItems);
-
         return cartDto;
     }
 
@@ -66,7 +65,7 @@ public class CartService {
         cartRepo.delete(cart);
     }
 
-    public void deleteUserCartItems(User user) {
+    public void deleteUserCart(User user) {
         cartRepo.deleteByUser(user);
     }
 }
