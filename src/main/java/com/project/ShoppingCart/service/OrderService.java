@@ -28,7 +28,6 @@ public class OrderService {
     public void placeOrder(User user) throws CustomException {
         CartDto cartDto = cartService.listCartItems(user);
         List<CartItemDto> cartItemDtoList = cartDto.getCartItems();
-
         if (cartDto.getTotalCost() == 0) {
             throw new CustomException("Cart is empty");
         }
@@ -37,7 +36,6 @@ public class OrderService {
         newOrder.setUser(user);
         newOrder.setTotalPrice(cartDto.getTotalCost());
         orderRepo.save(newOrder);
-
         for (CartItemDto cartItemDto : cartItemDtoList) {
             OrderItem orderItem = new OrderItem();
             orderItem.setCreatedDate(new Date());
@@ -47,7 +45,7 @@ public class OrderService {
             orderItem.setOrder(newOrder);
             orderItemsRepo.save(orderItem);
         }
-        cartService.deleteUserCartItems(user);
+        cartService.deleteUserCart(user);
     }
 
     public List<Order> listOrders(User user) {
