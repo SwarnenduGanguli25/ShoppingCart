@@ -26,17 +26,14 @@ public class UserService {
         if (Objects.nonNull(userRepo.findByEmail(signupDto.getEmail()))) {
             throw new CustomException("User with this email already exists");
         }
-
         String encryptedpassword = signupDto.getPassword();
         try {
             encryptedpassword = hashPassword(signupDto.getPassword());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
         User user = new User(signupDto.getFirstName(), signupDto.getLastName(),
                 signupDto.getEmail(), encryptedpassword);
-
         userRepo.save(user);
         ResponseDto responseDto = new ResponseDto("success", "Account is created");
         return responseDto;
@@ -56,7 +53,6 @@ public class UserService {
         if (Objects.isNull(user)) {
             throw new AuthenticationFailException("Invalid user");
         }
-
         try {
             if (!user.getPassword().equals(hashPassword(signinDto.getPassword()))) {
                 throw new AuthenticationFailException("Wrong Password");
