@@ -28,6 +28,7 @@ public class CategoryController {
         return categoryService.getAllCategory();
     }
 
+
     @PutMapping("/update/{categoryId}")
     public ResponseEntity<ApiResponse> updateCategory(@PathVariable("categoryId") int categoryId, @RequestBody Category category){
         if(!categoryService.findById(categoryId)){
